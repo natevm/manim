@@ -37,6 +37,10 @@ class ModuleLoader:
         if file_name is None:
             return None
 
+        module_dir = os.path.dirname(os.path.abspath(file_name))
+        if module_dir and module_dir not in sys.path:
+            sys.path.insert(0, module_dir)
+
         module_name = file_name.replace(os.sep, ".").replace(".py", "")
         spec = importlib.util.spec_from_file_location(module_name, file_name)
         module = importlib.util.module_from_spec(spec)

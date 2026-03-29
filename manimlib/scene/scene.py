@@ -100,8 +100,6 @@ class Scene(object):
         self.window = window
         if self.window:
             self.window.init_for_scene(self)
-            # Make sure camera and Pyglet window sync
-            self.camera_config["fps"] = 30
 
         # Core state of the scene
         self.camera: Camera = Camera(

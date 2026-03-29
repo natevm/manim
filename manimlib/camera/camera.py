@@ -249,6 +249,7 @@ class Camera(object):
                 2.0 / FRAME_HEIGHT,
                 frame.get_scale() / frame.get_focal_distance(),
             ),
+            pixel_shape=tuple(self.get_pixel_shape()),
             pixel_size=self.get_pixel_size(),
             camera_position=tuple(cam_pos),
             light_position=tuple(light_pos),

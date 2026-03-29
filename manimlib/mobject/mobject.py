@@ -102,6 +102,7 @@ class Mobject(object):
         self.locked_data_keys: set[str] = set()
         self.const_data_keys: set[str] = set()
         self.locked_uniform_keys: set[str] = set()
+        self.depth_test_locked: bool = False
         self.saved_state = None
         self.target = None
         self.bounding_box: Vect3Array = np.zeros((3, 3))
@@ -1933,13 +1934,31 @@ class Mobject(object):
     @affects_shader_info_id
     def apply_depth_test(self, recurse: bool = True) -> Self:
         for mob in self.get_family(recurse):
+            if getattr(mob, "depth_test_locked", False):
+                continue
             mob.depth_test = True
         return self
 
     @affects_shader_info_id
     def deactivate_depth_test(self, recurse: bool = True) -> Self:
         for mob in self.get_family(recurse):
+            if getattr(mob, "depth_test_locked", False):
+                continue
             mob.depth_test = False
+        return self
+
+    @affects_shader_info_id
+    def lock_depth_test(self, value: bool | None = None, recurse: bool = True) -> Self:
+        for mob in self.get_family(recurse):
+            mob.depth_test_locked = True
+            if value is not None:
+                mob.depth_test = value
+        return self
+
+    @affects_shader_info_id
+    def unlock_depth_test(self, recurse: bool = True) -> Self:
+        for mob in self.get_family(recurse):
+            mob.depth_test_locked = False
         return self
 
     def set_clip_plane(
